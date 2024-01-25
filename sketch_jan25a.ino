@@ -9,15 +9,15 @@ DHT dht(DHTPIN, DHTTYPE);
 int M,sensor_analog;
 const int sensor_pin =34;
 
-const char* ssid ="DESKTOP-IITC90J 2377";
-const char* password ="zielxndaa";
+const char* ssid ="POCO X5 Pro 5G";
+const char* password ="AkuUltramannn";
 #define CHAT_ID "1444762430"
-#define BOTtoken "6398151720:AAEB52JiAzE8WfcVmMSUKxVF5phrguGrAw"
+#define BOTtoken "6398151720:AAEB52JiAzE8WfcVmMSUKxVF5phrvguGrAw"
 
 WiFiClientSecure client;
 UniversalTelegramBot bot(BOTtoken, client);
 int botRequestDelay = 1000;
-unsigned log lastTimeBotRan;
+unsigned long lastTimeBotRan;
 
 void setup() {
   Serial.begin(115200);
@@ -30,7 +30,7 @@ void setup() {
   Serial.println("");
   Serial.println("WiFi Connected!");
   Serial.print("IP Address: ");
-  Serial.println(WiFi.localIp());
+  Serial.println("WiFi.localIp()");
 
   bot.sendMessage(CHAT_ID, "Tunggu dulu.. Monitoring akan segera dimulai", "");
 
@@ -38,7 +38,7 @@ void setup() {
   Serial.print("Workshop Monitoring Tanaman SMKn 7 Baleendah\n");
   dht.begin();
 
-  
+
   while(WiFi.status() != WL_CONNECTED){
     Serial.print(".");
     delay(500);
@@ -65,10 +65,23 @@ void loop() {
   Serial.println(" %");
   Serial.print("Suhu Udara sekarang: ");
   Serial.print(t);
-  Serial.println(" °C");0
-  delay(2000);
+  Serial.println(" °C");
+  kirimPesanTelegram(h, t, M);
 }
 
+void kirimPesanTelegram(float h, float t, int M){
+  String pesan = "Hai sayang.. Suhu saat ini : " + String(t, 2) + "℃\n" + 
+                  "Lalu Humaditas udara saat ini : " + String(h, 2) + "%\n" +
+                  "Tingkat kelembapan saat ini : " + String(M) + "%\n" + "Selamat menjalankan aktfitas sayaaaanggg<3" ;
+
+  if (bot.sendMessage(CHAT_ID, pesan, "Markdown")){
+    Serial.println("Pesan berhasil dikirim");
+  }else{
+    Serial.println("gagal mengirim pesan");
+  }
+
+  delay(1000);
+}
 
 
 
